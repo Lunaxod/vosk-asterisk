@@ -7,7 +7,7 @@
  * See http://www.asterisk.org for more information about
  * the Asterisk project. Please do not directly contact
  * any of the maintainers of this project for assistance;
- * the project provides a web site, mailing lists and IRC
+ * the project provides a website, mailing lists and IRC
  * channels for your use.
  *
  * This program is free software, distributed under the terms of
@@ -49,8 +49,6 @@
 
 /** \brief Forward declaration of speech (client object) */
 typedef struct vosk_speech_t vosk_speech_t;
-/** \brief Forward declaration of engine (global object) */
-typedef struct vosk_engine_t vosk_engine_t;
 
 /* Speech structure flags */
 enum vosk_speech_mode {
@@ -87,9 +85,8 @@ struct vosk_speech_t {
 	struct			ast_websocket *ws;
 	/* Buffer for frames */
 	char			buf[VOSK_BUF_SIZE];
-	int			offset;
+	int			    offset;
 	char			*last_result;
-	int				offset;
 	struct ast_speech_result *results;
 };
 
@@ -501,7 +498,6 @@ static int vosk_recog_write(struct ast_speech *speech, void *data, int len)
 			struct ast_json *res_json = ast_json_load_string(res, &err);
 			if (res_json != NULL) {
 				const char *text = ast_json_object_string_get(res_json, "text");
-<<<<<<< HEAD
 				const char *partial = ast_json_object_string_get(res_json, "partial");
 				if (partial != NULL && !ast_strlen_zero(partial)) {
 					ast_log(LOG_NOTICE, "(%s) Partial recognition result: %s\n", vosk_speech->name, partial);
@@ -511,7 +507,6 @@ static int vosk_recog_write(struct ast_speech *speech, void *data, int len)
 					ast_log(LOG_NOTICE, "(%s) Recognition result: %s\n", vosk_speech->name, text);
 					ast_free(vosk_speech->last_result);
 					vosk_speech->last_result = ast_strdup(text);
-=======
 				const char *grammar = ast_json_object_string_get(res_json, "grammar");
 				if (text != NULL && !ast_strlen_zero(text)) {
 					struct ast_speech_result *current_result;
@@ -542,7 +537,6 @@ static int vosk_recog_write(struct ast_speech *speech, void *data, int len)
 					/* Continue the recognition process otherwise*/
 					#else
 					/* If no stream info support from asterisk speech API - finish recognition as usual */
->>>>>>> pr/1
 					ast_speech_change_state(speech, AST_SPEECH_STATE_DONE);
 					#endif
 				}
@@ -722,7 +716,6 @@ static int vosk_recog_change_results_type(struct ast_speech *speech,enum ast_spe
 /** \brief Try to get result */
 struct ast_speech_result* vosk_recog_get(struct ast_speech *speech)
 {
-	struct ast_speech_result *speech_result;
 	vosk_speech_t *vosk_speech = speech->data;
 	struct ast_speech_result *speech_result = vosk_speech->results;
 	vosk_speech->results = NULL;
@@ -766,15 +759,12 @@ static int vosk_engine_config_load()
 		ast_log(LOG_WARNING, "No such configuration file %s\n", VOSK_ENGINE_CONFIG);
 		return -1;
 	}
-<<<<<<< HEAD
 	if((value = ast_variable_retrieve(cfg, "general", "url")) != NULL) {
-=======
 	if ((value = ast_variable_retrieve(cfg, "general", "log-level")) != NULL) {
 		ast_log(LOG_DEBUG, "general.log-level=%s\n", value);
 		vosk_engine.log_level = atoi(value);
 	}
 	if ((value = ast_variable_retrieve(cfg, "general", "url")) != NULL) {
->>>>>>> pr/1
 		ast_log(LOG_DEBUG, "general.url=%s\n", value);
 		vosk_engine.ws_url = ast_strdup(value);
 	}
