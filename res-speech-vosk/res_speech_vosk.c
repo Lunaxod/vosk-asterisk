@@ -179,6 +179,8 @@ static int vosk_recog_write(struct ast_speech *speech, void *data, int len)
 				}
 			} else {
 				ast_log(LOG_ERROR, "(%s) JSON parse error: %s\n", vosk_speech->name, err.text);
+				ast_speech_change_state(speech, AST_SPEECH_STATE_DONE);
+				return -1;
 			}
 			ast_json_free(res_json);
 		} else {
